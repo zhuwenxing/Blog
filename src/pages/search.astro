@@ -43,13 +43,21 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
       }
 
       // Get base path from current URL
-      const basePath = window.location.pathname.split('/').slice(0, -1).join('/') || '/';
-      const bundlePath = basePath.endsWith('/') ? `${basePath}pagefind/` : `${basePath}/pagefind/`;
+      // For /blog/search/ we want /blog/
+      const pathParts = window.location.pathname.split('/').filter(p => p);
+      // Remove 'search' from the end if present
+      if (pathParts[pathParts.length - 1] === 'search') {
+        pathParts.pop();
+      }
+      const basePath = '/' + (pathParts.length > 0 ? pathParts.join('/') + '/' : '');
+
+      console.log('Base path:', basePath);
+      console.log('Bundle path:', `${basePath}pagefind/`);
 
       // Init pagefind ui
       const search = new PagefindUI({
         element: "#pagefind-search",
-        bundlePath: bundlePath,
+        bundlePath: `${basePath}pagefind/`,
         showSubResults: true,
         showImages: false,
         processTerm: function (term: string) {
