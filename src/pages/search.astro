@@ -42,10 +42,14 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
           `;
       }
 
+      // Get base path from current URL
+      const basePath = window.location.pathname.split('/').slice(0, -1).join('/') || '/';
+      const bundlePath = basePath.endsWith('/') ? `${basePath}pagefind/` : `${basePath}/pagefind/`;
+
       // Init pagefind ui
       const search = new PagefindUI({
         element: "#pagefind-search",
-        bundlePath: `${import.meta.env.BASE_URL}pagefind/`,
+        bundlePath: bundlePath,
         showSubResults: true,
         showImages: false,
         processTerm: function (term: string) {
